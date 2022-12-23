@@ -25,6 +25,8 @@ A wrapper and lemmatizer implemented in Python for ___emMorph__ (Humor) Hungaria
 
 ## Install to Heroku
 
+__WARNING: Heroku free tier is discontinued.__
+
   - Register
   - Download Heroku CLI
   - Login to Heroku from the CLI
@@ -36,32 +38,39 @@ A wrapper and lemmatizer implemented in Python for ___emMorph__ (Humor) Hungaria
   - Push the repository to Heroku
   - Enjoy!
 
+## Build docker image and run as container
+
+  - `docker build . -t emmorphRESTAPI`
+  - `docker run -p8000:80 emmorphRESTAPI`
+  - Rest API is running on: http://localhost
+  - To use with https://render.com one must define the environment variable `PORT` to `8000`
+
 ## Usage
 
   - From browser or anyhow through the REST API:
-     - Lemmatization: https://emmorph.herokuapp.com/stem/működik
-     - Detailed analysis: https://emmorph.herokuapp.com/analyze/működik
-     - Lemmatisation with the corresponding detailed analysis: https://emmorph.herokuapp.com/dstem/működik
+     - Lemmatization: https://emmorph.onrender.com/stem/működik
+     - Detailed analysis: https://emmorph.onrender.com/analyze/működik
+     - Lemmatisation with the corresponding detailed analysis: https://emmorph.onrender.com/dstem/működik
      - The library also support HTTP POST requests to handle multiple words at once. (See examples for details.)
 
 	```python
 	>>> import requests
 	>>> import json
 	>>> word = 'működik'
-	>>> json.loads(requests.get('https://emmorph.herokuapp.com/stem/' + word).text)[word]
+	>>> json.loads(requests.get('https://emmorph.onrender.com/stem/' + word).text)[word]
 	[{'lemma': 'működik', 'tag': '[/V][Prs.Def.3Pl]'}, {'lemma': 'működik', 'tag': '[/V][Prs.NDef.3Sg]'}]
-	>>> json.loads(requests.get('https://emmorph.herokuapp.com/analyze/' + word).text)[word]
+	>>> json.loads(requests.get('https://emmorph.onrender.com/analyze/' + word).text)[word]
 	[{'morphana': 'működik[/V]=működ+ik[Prs.Def.3Pl]=ik'}, {'morphana': 'működik[/V]=működ+ik[Prs.NDef.3Sg]=ik'}]
-	>>> json.loads(requests.get('https://emmorph.herokuapp.com/dstem/' + word).text)[word]
+	>>> json.loads(requests.get('https://emmorph.onrender.com/dstem/' + word).text)[word]
     [{'lemma': 'működik', 'tag': '[/V][Prs.Def.3Pl]', 'morphana': 'működik[/V]=működ+ik[Prs.Def.3Pl]=ik', 'readable': 'működik[/V]=működ + ik[Prs.Def.3Pl]', 'twolevel': 'm:m ű:ű k:k ö:ö d:d :i :k :[/V] i:i k:k :[Prs.Def.3Pl]'}, {'lemma': 'működik', 'tag': '[/V][Prs.NDef.3Sg]', 'morphana': 'működik[/V]=működ+ik[Prs.NDef.3Sg]=ik', 'readable': 'működik[/V]=működ + ik[Prs.NDef.3Sg]', 'twolevel': 'm:m ű:ű k:k ö:ö d:d :i :k :[/V] i:i k:k :[Prs.NDef.3Sg]'}]
 	>>> words = '\n'.join(('form', word, 'word2', ''))  # One word per line (first line is header, trailing newline is needed!)
-	>>> words_out = requests.post('https://emmorph.herokuapp.com/stem', files={'file': words}).text.split('\n')
+	>>> words_out = requests.post('https://emmorph.onrender.com/stem', files={'file': words}).text.split('\n')
 	>>> print(words_out[1].split('\t'))
 	['működik', '[{"lemma": "működik", "tag": "[/V][Prs.Def.3Pl]"}, {"lemma": "működik", "tag": "[/V][Prs.NDef.3Sg]"}]']
-	>>> words_out = requests.post('https://emmorph.herokuapp.com/analyze', files={'file': words}).text.split('\n')
+	>>> words_out = requests.post('https://emmorph.onrender.com/analyze', files={'file': words}).text.split('\n')
 	>>> print(words_out[1].split('\t'))
 	['működik', '[{"morphana": "működik[/V]=működ+ik[Prs.Def.3Pl]=ik"}, {"morphana": "működik[/V]=működ+ik[Prs.NDef.3Sg]=ik"}]']
-    >>> words_out = requests.post('https://emmorph.herokuapp.com/dstem', files={'file': words}).text.split('\n')
+    >>> words_out = requests.post('https://emmorph.onrender.com/dstem', files={'file': words}).text.split('\n')
 	>>> print(words_out[1].split('\t'))
 	['működik', '[{"lemma": "működik", "tag": "[/V][Prs.Def.3Pl]", "morphana": "működik[/V]=működ+ik[Prs.Def.3Pl]=ik", "readable": "működik[/V]=működ + ik[Prs.Def.3Pl]", "twolevel": "m:m ű:ű k:k ö:ö d:d :i :k :[/V] i:i k:k :[Prs.Def.3Pl]"}, {"lemma": "működik", "tag": "[/V][Prs.NDef.3Sg]", "morphana": "működik[/V]=működ+ik[Prs.NDef.3Sg]=ik", "readable": "működik[/V]=működ + ik[Prs.NDef.3Sg]", "twolevel": "m:m ű:ű k:k ö:ö d:d :i :k :[/V] i:i k:k :[Prs.NDef.3Sg]"}]']
 	```
