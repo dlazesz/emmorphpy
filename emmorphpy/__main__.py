@@ -3,7 +3,7 @@
 
 import sys
 
-from __init__ import EmMorphPy
+from . import EmMorphPy
 
 from xtsv import build_pipeline, parser_skeleton, add_bool_arg
 # from xtsv import jnius_config, singleton_store_factory, pipeline_rest_api
