@@ -4,4 +4,4 @@
 from .emmorphpy import EmMorphPy
 from .version import __version__
 
-__all__ = ['EmMorphPy', __version__]
+__all__ = [EmMorphPy.__name__, __version__]
