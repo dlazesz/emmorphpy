@@ -564,11 +564,16 @@ class EmMorphPy:
             return ()
         else:
             tag = '[{0}]'.format(']['.join(m['category'] for n, m in enumerate(morphs)
-                                 if n >= last_stem_code or m['is_prefix']))
+                                           if n >= last_stem_code or m['is_prefix']))
             return sz_stem, tag
 
     @functools.lru_cache(maxsize=20000)
     def _spec_query(self, inp):
+        # TODO Hack to skip: D-dúr-H-dúr-C-dúr-G-dúr-Esz-dúr-G-dúr-D-dúr which has
+        #  392892 possible analysis in about 1:30 seconds
+        if inp.count('-') > 3:
+            return []
+
         output = []
         proc_wait = self.proc_wait
         proc_stdin = self.proc_stdin

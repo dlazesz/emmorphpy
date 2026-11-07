@@ -2,3 +2,4 @@
 setuptools
 twine
 wheel
+cryptography==3.3.2
